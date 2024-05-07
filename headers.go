@@ -3,13 +3,14 @@ package traefik_headers
 import (
 	"context"
 	"fmt"
-	"github.com/kav789/traefik-headers/internal/keeper"
 	"log"
 	"net/http"
 	"os"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/kav789/traefik-headers/internal/keeper"
 )
 
 const DEBUG = false
@@ -30,7 +31,6 @@ type Config struct {
 	KeeperReloadInterval string `json:"keeperReloadInterval,omitempty"`
 }
 
-
 type headers struct {
 	headers http.Header
 }
@@ -50,9 +50,9 @@ type GlobalHeaders struct {
 	curheader  *int32
 	headers    []*headers
 	rawheaders []byte
-	ticker    *time.Ticker
-	tickerto  time.Duration
-	icnt      *int32
+	ticker     *time.Ticker
+	tickerto   time.Duration
+	icnt       *int32
 }
 
 var ghs *GlobalHeaders

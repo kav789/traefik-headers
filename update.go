@@ -15,7 +15,6 @@ func (g *GlobalHeaders) logWorkingHeaders() {
 	}
 }
 
-
 func (g *GlobalHeaders) setFromData() error {
 	defer g.logWorkingHeaders()
 	if g.config == nil {

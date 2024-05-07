@@ -4,10 +4,11 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type Settings interface {

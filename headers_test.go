@@ -1,23 +1,22 @@
 package traefik_headers_test
 
 import (
-	"io"
 	"context"
 	"encoding/json"
-	headersrwr "github.com/kav789/traefik-headers"
+	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
-	"fmt"
+
+	headersrwr "github.com/kav789/traefik-headers"
 )
 
 type testdata struct {
-	head  map[string][]string
+	head map[string][]string
 }
 
 func Test_Headers2(t *testing.T) {
-
 	cases := []struct {
 		name  string
 		conf  string
@@ -26,15 +25,16 @@ func Test_Headers2(t *testing.T) {
 		{
 			name: "t1",
 			conf: `{
-  "Content-Security-Policy": [
-   "connect-src *; frame-ancestors wildberries.ru *.wildberries.ru wildberries.am *.wildberries.am wildberries.kg *.wildberries.kg wildberries.by *.wildberries.by wildberries.kz *.wildberries.kz wildberries.ua *.wildberries.ua wildberries.eu *.wildberries.eu wildberries.ge *.wildberries.ge"
+  "Content-type1": [
+   "connect-src *; frame-ancestors wildberries.ru *.wildberries.ru wildberries.am *.wildberries.am wildberries.kg *.wildberries.kg wildberries.by *.wildberries.by wildberries.kz *.wildberries.kz wildberries.ua *.wildberries.ua wildberries.eu *.wildberries.eu wildberries.ge *.wildberries.ge",
+   "aaa"
   ]
 
 }`,
 			tests: []testdata{
-				testdata{
+				{
 					head: map[string][]string{
-						"cc-bb": []string{ "asdfgh" },
+						"cc-bb": {"asdfgh"},
 					},
 				},
 			},
@@ -42,9 +42,9 @@ func Test_Headers2(t *testing.T) {
 	}
 
 	next := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		fmt.Println("nnnnnnnnnnnnnn")
 		io.WriteString(rw, "<html><body>Hello World!</body></html>")
-
+		rw.Header().Set("Content-type", "application/json")
+		rw.WriteHeader(400)
 	})
 
 	cfg := headersrwr.CreateConfig()
@@ -73,26 +73,26 @@ func Test_Headers2(t *testing.T) {
 					panic(err)
 				}
 
-//				handler := func(w http.ResponseWriter, r *http.Request) {
-//					io.WriteString(w, "<html><body>Hello World!</body></html>")
-//				}
-
 				rec := httptest.NewRecorder()
-//				handler(rec, req)
-
 				h.ServeHTTP(rec, req)
-				for k,v := range rec.HeaderMap {
-					fmt.Println("hhhhhh", k, v)
+
+				for k, v := range rec.HeaderMap {
+					fmt.Println("resp h", k, v)
 				}
-/*
-				if rec.Code != 200 {
-					t.Errorf("first %s %v expected 200 but get %d", d.uri, d.head, rec.Code)
-				}
-*/
+
+				fmt.Println("code", rec.Code)
+				b, _ := io.ReadAll(rec.Body)
+
+				fmt.Println("body", string(b))
+
+				/*
+					if rec.Code != 200 {
+						t.Errorf("first %s %v expected 200 but get %d", d.uri, d.head, rec.Code)
+					}
+				*/
 			}
 		})
 	}
-
 }
 
 func prepreq(uri string, head map[string][]string) (*http.Request, error) {
