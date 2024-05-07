@@ -3,5 +3,5 @@ type: middleware
 import: github.com/kav789/traefik-headers
 summary: Headers
 testData:
-  ratelimitData: |
-    { limits:[ ] }
+  headersData: |
+    { }

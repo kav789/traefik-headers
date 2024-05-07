@@ -1,6 +1,7 @@
 package traefik_headers_test
 
 import (
+	"io"
 	"context"
 	"encoding/json"
 	headersrwr "github.com/kav789/traefik-headers"
@@ -8,18 +9,15 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
+	"fmt"
 )
 
 type testdata struct {
-	uri   string
-	head  map[string]string
-	uri2  string
-	head2 map[string]string
-	res   bool
+	head  map[string][]string
 }
 
 func Test_Headers2(t *testing.T) {
-/*
+
 	cases := []struct {
 		name  string
 		conf  string
@@ -27,178 +25,86 @@ func Test_Headers2(t *testing.T) {
 	}{
 		{
 			name: "t1",
-			conf: `
-{}`,
+			conf: `{
+  "Content-Security-Policy": [
+   "connect-src *; frame-ancestors wildberries.ru *.wildberries.ru wildberries.am *.wildberries.am wildberries.kg *.wildberries.kg wildberries.by *.wildberries.by wildberries.kz *.wildberries.kz wildberries.ua *.wildberries.ua wildberries.eu *.wildberries.eu wildberries.ge *.wildberries.ge"
+  ]
 
+}`,
 			tests: []testdata{
 				testdata{
-					uri: "https://aa.bb/api",
-					head: map[string]string{
-						"cc-bb": "asdfgh",
+					head: map[string][]string{
+						"cc-bb": []string{ "asdfgh" },
 					},
-					res: false,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v2",
-					head: map[string]string{
-						"cc-bb": "asdfgh",
-					},
-					res: false,
-				},
-
-				testdata{
-					uri: "https://aa.bb/task",
-					res: true,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-
-					res: true,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-					head: map[string]string{
-						"Aa-bb": "asdfg",
-					},
-					uri2: "https://aa.bb/api/v3/dddd/aaa/methods",
-					head2: map[string]string{
-						"Aa-bb": "asdfM",
-					},
-					res: false,
-				},
-
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-					head: map[string]string{
-						"Aa-bb": "asdfg",
-					},
-					uri2: "https://aa.bb/api/v3/dddd/aaa/methods",
-					head2: map[string]string{
-						"Aa-bb": "asdfMd",
-					},
-					res: true,
-				},
-
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-					head: map[string]string{
-						"aa-bb": "asdfg",
-					},
-					res: false,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-					head: map[string]string{
-						"Aa-bb": "asdfga",
-					},
-					res: true,
-				},
-
-				testdata{
-					uri: "https://aa.bb/api/v4/methods",
-
-					res: true,
-				},
-			},
-		},
-
-		{
-			name: "t2",
-			conf: `{}`,
-
-			tests: []testdata{
-				testdata{
-					uri: "https://aa.bb/task",
-					res: true,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v2/aaa/aaa/methods",
-					res: false,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v3/methods/aa",
-					res: false,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v3/methods",
-					res: true,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v3/methods/aa/bb",
-					res: true,
-				},
-				testdata{
-					uri: "https://aa.bb/api/v4/methods",
-					res: true,
 				},
 			},
 		},
 	}
-*/
 
-	next := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {})
+	next := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		fmt.Println("nnnnnnnnnnnnnn")
+		io.WriteString(rw, "<html><body>Hello World!</body></html>")
+
+	})
+
 	cfg := headersrwr.CreateConfig()
 	cfg.HeadersData = `{}`
 	_, err := headersrwr.New(context.Background(), next, cfg, "headers")
 	if err != nil {
 		t.Fatal(err)
 	}
-/*
+
 	for _, tc := range cases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			var tst interface{}
-
 			if err := json.Unmarshal([]byte(tc.conf), &tst); err != nil {
 				t.Fatal("init json:", err)
 			}
-			cfg.RatelimitData = tc.conf
-			rl, err := ratelimit.New(context.Background(), next, cfg, "ratelimit")
+			cfg.HeadersData = tc.conf
+			h, err := headersrwr.New(context.Background(), next, cfg, "headers")
 			if err != nil {
 				t.Fatal(err)
 			}
+
 			for _, d := range tc.tests {
-				req, err := prepreq(d.uri, d.head)
+				req, err := prepreq("http://aa.vv", d.head)
 				if err != nil {
 					panic(err)
 				}
+
+//				handler := func(w http.ResponseWriter, r *http.Request) {
+//					io.WriteString(w, "<html><body>Hello World!</body></html>")
+//				}
+
 				rec := httptest.NewRecorder()
-				rl.ServeHTTP(rec, req)
+//				handler(rec, req)
+
+				h.ServeHTTP(rec, req)
+				for k,v := range rec.HeaderMap {
+					fmt.Println("hhhhhh", k, v)
+				}
+/*
 				if rec.Code != 200 {
 					t.Errorf("first %s %v expected 200 but get %d", d.uri, d.head, rec.Code)
 				}
-				if len(d.uri2) != 0 {
-					req, err = prepreq(d.uri2, d.head2)
-					if err != nil {
-						panic(err)
-					}
-				}
-				rec = httptest.NewRecorder()
-				rl.ServeHTTP(rec, req)
-				if d.res {
-					if rec.Code != 200 {
-						t.Errorf("%s %v expected 200 but get %d", d.uri, d.head, rec.Code)
-					}
-				} else {
-					if rec.Code == 200 {
-						t.Errorf("%s %v expected NOT 200 but get 200", d.uri, d.head)
-					}
-				}
-				time.Sleep(1 * time.Second)
+*/
 			}
 		})
 	}
-*/
+
 }
 
-func prepreq(uri string, head map[string]string) (*http.Request, error) {
+func prepreq(uri string, head map[string][]string) (*http.Request, error) {
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		return nil, err
 	}
 	if head != nil {
-		for k, v := range head {
-			req.Header.Set(k, v)
+		for k, vv := range head {
+			for _, v := range vv {
+				req.Header.Add(k, v)
+			}
 		}
 	}
 	return req, nil
