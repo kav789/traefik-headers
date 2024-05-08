@@ -22,60 +22,64 @@
   - *Примечание:* Содержит значения заголовка http ответа. Пустые значения и значения не содержашие значащих символов будут проигнорированы.
 
 -  примеры заголовков:
-   - ```
-{
-  "Access-Control-Allow-Origin": [
-    "*"
-  ],
-  "Access-Control-Allow-Methods": [
-    "GET,POST,OPTIONS"
-  ],
-  "Access-Control-Allow-Credentials": [
-    "true"
-  ],
-  "Access-Control-Expose-Headers": [
-    "Date,Content-Length,Content-Range,X-Request-Id,Strict-Transport-Security,X-Content-Type-Options,X-Frame-Options,X-XSS-Protection"
-  ],
-  "Access-Control-Allow-Headers": [
-    "Accept,DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Host,X-Request-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Expose-Headers"
-  ],
-  "Strict-Transport-Security": [
-    "max-age=31536000; includeSubDomains; preload"
-  ],
-  "X-Content-Type-Options": [
-    "nosniff"
-  ],
-  "X-Frame-Options": [
-    "SAMEORIGIN",
-    "ALLOW-FROM wildberries.ru",
-    "ALLOW-FROM *.wildberries.ru",
-    "ALLOW-FROM wildberries.am",
-    "ALLOW-FROM *.wildberries.am",
-    "ALLOW-FROM wildberries.kg",
-    "ALLOW-FROM *.wildberries.kg",
-    "ALLOW-FROM wildberries.by",
-    "ALLOW-FROM *.wildberries.by",
-    "ALLOW-FROM wildberries.kz",
-    "ALLOW-FROM *.wildberries.kz",
-    "ALLOW-FROM wildberries.ua",
-    "ALLOW-FROM *.wildberries.ua",
-    "ALLOW-FROM wildberries.eu",
-    "ALLOW-FROM *.wildberries.eu",
-    "ALLOW-FROM wildberries.ge",
-    "ALLOW-FROM *.wildberries.ge"
-  ],
-  "Content-Security-Policy": [
-    "connect-src *; frame-ancestors wildberries.ru *.wildberries.ru wildberries.am *.wildberries.am wildberries.kg *.wildberries.kg wildberries.by *.wildberries.by wildberries.kz *.wildberries.kz wildberries.ua *.wildberries.ua wildberries.eu *.wildberries.eu wildberries.ge *.wildberries.ge"
-  ],
-  "X-XSS-Protection": [
-    "1; mode=block"
-  ],
-  "Cache-Control": [
-    "no-cache, no-store, must-revalidate"
-  ]
-}
+   - ``` 
+     { 
+       "Access-Control-Allow-Origin": [
+         "*"
+       ],
+       "Access-Control-Allow-Methods": [
+         "GET,POST,OPTIONS"
+       ],
+       "Access-Control-Allow-Credentials": [
+         "true"
+       ],
+       "Access-Control-Expose-Headers": [
+         "Date,Content-Length,Content-Range,X-Request-Id,Strict-Transport-Security,X-Content-Type-Options,X-Frame-Options,X-XSS-Protection"
+       ],
+       "Access-Control-Allow-Headers": [
+         "Accept,DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Host,X-Request-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Expose-Headers"
+       ],
+       "Strict-Transport-Security": [
+         "max-age=31536000; includeSubDomains; preload"
+       ],
+       "X-Content-Type-Options": [
+         "nosniff"
+       ],
+       "X-Frame-Options": [
+         "SAMEORIGIN",
+         "ALLOW-FROM wildberries.ru",
+         "ALLOW-FROM *.wildberries.ru",
+         "ALLOW-FROM wildberries.am",
+         "ALLOW-FROM *.wildberries.am",
+         "ALLOW-FROM wildberries.kg",
+         "ALLOW-FROM *.wildberries.kg",
+         "ALLOW-FROM wildberries.by",
+         "ALLOW-FROM *.wildberries.by",
+         "ALLOW-FROM wildberries.kz",
+         "ALLOW-FROM *.wildberries.kz",
+         "ALLOW-FROM wildberries.ua",
+         "ALLOW-FROM *.wildberries.ua",
+         "ALLOW-FROM wildberries.eu",
+         "ALLOW-FROM *.wildberries.eu",
+         "ALLOW-FROM wildberries.ge",
+         "ALLOW-FROM *.wildberries.ge"
+       ],
+       "Content-Security-Policy": [
+         "connect-src *; frame-ancestors wildberries.ru *.wildberries.ru wildberries.am *.wildberries.am wildberries.kg *.wildberries.kg wildberries.by *.wildberries.by wildberries.kz *.wildberries.kz wildberries.ua *.wildberries.ua wildberries.eu *.wildberries.eu wildberries.ge *.wildberries.ge"
+       ],
+       "X-XSS-Protection": [
+         "1; mode=block"
+       ],
+       "Cache-Control": [
+         "no-cache, no-store, must-revalidate"
+       ]
+
+     }
      ```
-     заголовки http ответа
+
+
+    
+    заголовки http ответа
 
 Конфигурация хранится в локальном кэше headers
 
