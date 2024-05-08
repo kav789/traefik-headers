@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync/atomic"
 )
 
@@ -15,7 +16,15 @@ func (g *GlobalHeaders) update(b []byte) error {
 
 	newh := make(http.Header, len(tmph))
 	for k, vv := range tmph {
-		newh[http.CanonicalHeaderKey(k)] = vv
+		vv2 := make([]string, 0, len(vv))
+		for _, v := range vv {
+			if len(strings.TrimSpace(v)) != 0 {
+				vv2 = append(vv2, v)
+			}
+		}
+		if len(vv2) > 0 {
+			newh[http.CanonicalHeaderKey(k)] = vv2
+		}
 	}
 
 	curheader := int(atomic.LoadInt32(g.curheader))

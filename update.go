@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"sync/atomic"
 )
 
 func (g *GlobalHeaders) logWorkingHeaders() {
@@ -12,6 +13,9 @@ func (g *GlobalHeaders) logWorkingHeaders() {
 		locallog(fmt.Sprintf("working headers: %s", g.rawheaders))
 	} else {
 		locallog(fmt.Sprintf("working headers: %s", buf.String()))
+	}
+	for k, vv := range g.headers[int(atomic.LoadInt32(ghs.curheader))].headers {
+		locallog(fmt.Sprintf("working header key %d,%d: %q: %+q", g.version.Version, g.version.ModRevision, k, vv))
 	}
 }
 

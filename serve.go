@@ -6,7 +6,6 @@ import (
 )
 
 func (h *Headers) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	//	locallog("tttttttt")
 	h.next.ServeHTTP(&responseWriter{
 		rw:      rw,
 		headers: ghs.headers[int(atomic.LoadInt32(ghs.curheader))],
@@ -27,11 +26,8 @@ func (r *responseWriter) Write(bytes []byte) (int, error) {
 }
 
 func (r *responseWriter) WriteHeader(code int) {
-	locallog("wrhhhhh ", code)
 	head := r.rw.Header()
-	//	locallog("wrhhhhhead ", head)
 	for k, vv := range r.headers.headers {
-		//		locallog("wrhhhhhead KK ", k)
 		if _, ok := head[k]; !ok {
 			for _, v := range vv {
 				r.rw.Header().Add(k, v)

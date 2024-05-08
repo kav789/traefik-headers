@@ -10,7 +10,7 @@ The source code of the plugin should be organized as follows:
     └── src
         └── github.com
             └── wbpaygate
-                └── traefik-ratelimit
+                └── traefik-headers
                     ├── main.go
                     ├── go.mod
                     └── ...
